@@ -47,8 +47,7 @@ var selectedJoinID = -1;
 var faceIndexArr = [2, 2, 3, 3, 4, 4, 5, 5, 0, 0, 1, 1];
 
 function joinTikla(jtag) {
-    // document.getElementById("selectedJoinPropertyDiv").style.visibility =
-    // 'visible';
+
     i = jtag.id;
     selectedJoinID = i;
     // console.log(i);
@@ -68,12 +67,12 @@ function joinTikla(jtag) {
     }
 }
 
-
 function baslat() {
-
+    // part_list.geometry.faces.color.setHex(0x777777);
     for (i = 0; i < part_list.length; i++) {
         for (j = 0; j < 12; j = j + 1) {
             part_list[i].geometry.faces[j].color.setHex(0xffffff);
+
             switch (j) {
                 case 0:
                 case 1:
@@ -102,30 +101,20 @@ function baslat() {
                 default:
                     break;
             }
+            part_list[i].geometry.colorsNeedUpdate = true;
             part_list[i].geometry.elementsNeedUpdate = true;
             part_list[i].geometry.colorsNeedUpdate = true;
-
+            part_list[i].geometry.elementsNeedUpdate = true;
         }
     }
 
     start_flag = 1;
-    // document.getElementById("secim1").style.backgroundColor = "black";
-    // document.getElementById("secim2").style.backgroundColor = "white";
-    // document.getElementById("secim3").style.backgroundColor = "white";
-    // document.getElementById("secim4").style.backgroundColor = "white";
-    // document.getElementById("secim5").style.backgroundColor = "white";
-    // // document.getElementById("secim6").style.backgroundColor = "white";
-    // $("#secim1").text('Secim1');
-    // $("#secim2").text('Secim2');
-    // $("#secim3").text('Secim3');
-    // $("#secim4").text('Secim4');
-    // $("#secim5").text('Secim5');
-    // $("#secim6").text('Secim6');
 }
 
 function setCanvasSize() {
     console.log("setCanvasSize çalıştı");
     renderer.setSize(container.offsetWidth, container.offsetHeight);
+    console.log(container.offsetWidth, container.offsetHeight)
 }
 
 function addLights() {
@@ -187,8 +176,8 @@ function addLights() {
     scene.add(light);
 }
 
+
 function initializeControl() {
-    console.log("initializeControl çalıştı");
     controls = new THREE.TrackballControls(camera);
     controls.rotateSpeed = 1.0 * 3;
     controls.zoomSpeed = 1.2 * 3;
@@ -214,6 +203,7 @@ function onDocumentMouseDown(event) {
         canvasLeft += cnv.offsetLeft;
         cnv = cnv.offsetParent;
     }
+    console.log(canvasTop);
     mouse.x = (((event.clientX - canvasLeft) / canvas.width) * 2 - 1);// @
     mouse.y = (-((event.clientY - canvasTop) / canvas.height) * 2 + 1);// @
     raycaster.setFromCamera(mouse, camera);//
@@ -262,8 +252,10 @@ function onDocumentMouseDown(event) {
                 }
             }
 
-
-            if ((kesisen[0].object.geometry.faces[sayac].color.r == 1 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 0) || (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 1 && kesisen[0].object.geometry.faces[sayac].color.b == 0) || (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 1)) {
+            // warning(sayac);
+            if ((kesisen[0].object.geometry.faces[sayac].color.r == 1 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 0) ||
+                (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 1 && kesisen[0].object.geometry.faces[sayac].color.b == 0) ||
+                (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 1)) {
                 alert("daha önce seçtiğiniz bir yüzü başka bir yüz-renk grubunda seçemezsiniz.");
                 return;
             }
@@ -291,7 +283,10 @@ function onDocumentMouseDown(event) {
             if (sayac % 2 == 0) yesil1 = sayac;
             if (sayac % 2 != 0) yesil1 = sayac - 1;
 
-            if ((kesisen[0].object.geometry.faces[sayac].color.r == 1 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 0) || (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 1 && kesisen[0].object.geometry.faces[sayac].color.b == 0) || (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 1)) {
+            // warning(sayac);
+            if ((kesisen[0].object.geometry.faces[sayac].color.r == 1 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 0) ||
+                (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 1 && kesisen[0].object.geometry.faces[sayac].color.b == 0) ||
+                (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 1)) {
                 alert("daha önce seçtiğiniz bir yüzü başka bir yüz-renk grubunda seçemezsiniz.");
                 return;
             }
@@ -316,7 +311,11 @@ function onDocumentMouseDown(event) {
             if (sayac % 2 == 0) yesil2 = sayac;
             if (sayac % 2 != 0) yesil2 = sayac - 1;
 
-            if ((kesisen[0].object.geometry.faces[sayac].color.r == 1 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 0) || (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 1 && kesisen[0].object.geometry.faces[sayac].color.b == 0) || (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 1)) {
+
+            //warning(sayac);
+            if ((kesisen[0].object.geometry.faces[sayac].color.r == 1 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 0) ||
+                (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 1 && kesisen[0].object.geometry.faces[sayac].color.b == 0) ||
+                (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 1)) {
                 alert("daha önce seçtiğiniz bir yüzü başka bir yüz-renk grubunda seçemezsiniz.");
                 return;
             }
@@ -339,7 +338,12 @@ function onDocumentMouseDown(event) {
             sayac = kesisen[0].faceIndex;
             if (sayac % 2 == 0) mavi1 = sayac;
             if (sayac % 2 != 0) mavi1 = sayac - 1;
-            if ((kesisen[0].object.geometry.faces[sayac].color.r == 1 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 0) || (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 1 && kesisen[0].object.geometry.faces[sayac].color.b == 0) || (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 1)) {
+
+            //warning(sayac);
+
+            if ((kesisen[0].object.geometry.faces[sayac].color.r == 1 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 0) ||
+                (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 1 && kesisen[0].object.geometry.faces[sayac].color.b == 0) ||
+                (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 1)) {
                 alert("daha önce seçtiğiniz bir yüzü başka bir yüz-renk grubunda seçemezsiniz.");
                 return;
             }
@@ -362,7 +366,11 @@ function onDocumentMouseDown(event) {
             sayac = kesisen[0].faceIndex;
             if (sayac % 2 == 0) mavi2 = sayac;
             if (sayac % 2 != 0) mavi2 = sayac - 1;
-            if ((kesisen[0].object.geometry.faces[sayac].color.r == 1 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 0) || (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 1 && kesisen[0].object.geometry.faces[sayac].color.b == 0) || (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 1)) {
+
+            // warning(sayac);
+            if ((kesisen[0].object.geometry.faces[sayac].color.r == 1 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 0) ||
+                (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 1 && kesisen[0].object.geometry.faces[sayac].color.b == 0) ||
+                (kesisen[0].object.geometry.faces[sayac].color.r == 0 && kesisen[0].object.geometry.faces[sayac].color.g == 0 && kesisen[0].object.geometry.faces[sayac].color.b == 1)) {
                 alert("daha önce seçtiğiniz bir yüzü başka bir yüz-renk grubunda seçemezsiniz.");
                 return;
             }
@@ -380,45 +388,9 @@ function onDocumentMouseDown(event) {
     var yuz = 0;
     var sayac = kesisen[0].faceIndex;
 
-    yuz = faceIndexArr[sayac]; // soldaki seçilen objelerin yüz ve panel bilgilarini içeren butona, yüz yazdırır bilgisi
+    yuz = faceIndexArr[sayac]; // sol tarafta panel uzerine seçilen objelerin yüz ve panel bilgilarini yazar
 
-
-     // if((kesisen[0].face.color.r==1) && (kesisen[0].face.color.g==0) && (
-     // kesisen[0].face.color.b==0))//eğer tıkladığımız kırmızıysa beyaz yap {
-     //
-     // kesisen[0].object.geometry.faces[sayac].color.setHex(0xffffff);
-     // if(sayac%2==0) sayac=sayac+1;{
-     //  kesisen[0].object.geometry.faces[sayac].color.setHex(0xffffff);
-     //  kesisen[0].object.geometry.colorsNeedUpdate=true;}
-     //
-     //  if ((sayac%2)!=0)sayac=sayac-1;{
-     //  kesisen[0].object.geometry.faces[sayac].color.setHex(0xffffff);
-     //  kesisen[0].object.geometry.colorsNeedUpdate=true; }} else {
-    kesisen[0].object.geometry.faces[sayac].color.setHex(tiklaRenk);// tiklanan
-                                                                    // renkte
-                                                                    // yüzeyi
-                                                                    // boyamak
-    // switch (yuz) {
-    //     case 0:
-    //         yazsin = 4; // 1
-    //         break;
-    //     case 1:
-    //         yazsin = 5;
-    //         break;
-    //     case 2:
-    //         yazsin = 0;
-    //         break;
-    //     case 3:
-    //         yazsin = 1;
-    //         break;
-    //     case 4:
-    //         yazsin = 2;
-    //         break;
-    //     case 5:
-    //         yazsin = 3;
-    //         break;
-    // }
-
+    kesisen[0].object.geometry.faces[sayac].color.setHex(tiklaRenk);// tiklanan renkte yüzeyi boyamak
 
     kesisen[0].object.geometry.faces[sayac].materialIndex = 6;
     if ((sayac % 2) != 0) sayac = sayac - 1;
@@ -427,7 +399,6 @@ function onDocumentMouseDown(event) {
     kesisen[0].object.geometry.faces[sayac].color.setHex(tiklaRenk); // Objeye tiklanildiginda yüzeyi boyar
     // kesisen[0].object.geometry.faces[sayac].materialIndex=yazsin;
     kesisen[0].object.geometry.elementsNeedUpdate = true;
-    console.log("geldi");
     kesisen[0].object.geometry.colorsNeedUpdate = true;
     for (i = 0; part_list.length; i++) {
         if (part_list[i] == kesisen[0].object) {
@@ -455,7 +426,6 @@ function mouseMove(event) {
         case 5:
         case 6:
             hover_color = 0x00ced1;
-
             break;
         case 7:
             alert("Birleştirilecek 2 panel için toplamda 6 adet yüz seçmelisiniz.");
@@ -475,14 +445,19 @@ function mouseMove(event) {
 
     mouse.x = (((event.clientX - canvasLeft) / canvas.width) * 2 - 1);// @
     mouse.y = (-((event.clientY - canvasTop) / canvas.height) * 2 + 1);// @
-    $("#mousecoord").text("Mouse Koordinatları:" + mouse.y.toFixed(2)  +  mouse.x.toFixed(2));
+    $("#mousecoord").text("Mouse Koordinatları:" + mouse.y.toFixed(2) + mouse.x.toFixed(2));
     raycaster.setFromCamera(mouse, camera);
-    var uzerinde = [], panelcast=[];
-    uzerinde = raycaster.intersectObjects(part_list);
-    panelcast = raycaster.intersectObjects(panels);
 
-    console.log(panelcast[0]);
-     $("#hoverinfo").textContent("Yüz: " + faceIndexArr[uzerinde[0].faceIndex]);
+    var uzerinde = [], panelcast = [];
+    uzerinde = raycaster.intersectObjects(part_list);
+
+    for (cnt = 0; cnt < part_list.length; cnt++) {
+        if (uzerinde[cnt].object.uuid === part_list[cnt].uuid)
+        {
+            console.log(panels[cnt].name);
+        }
+    }
+
     if (uzerinde[0] == null) {// uzerinde boşsa fonksiyondan çık çıkmadan önce
         // bütün objelerin bütün kenarlarının renklerini
         // tara. yeşil kalan varsa beyaz yap
@@ -491,7 +466,7 @@ function mouseMove(event) {
                 if ((part_list[p].geometry.faces[t].color.r == 0) && (part_list[p].geometry.faces[t].color.g == 1) && (part_list[p].geometry.faces[t].color.b == 0)) continue;
                 if ((part_list[p].geometry.faces[t].color.r == 1) && (part_list[p].geometry.faces[t].color.g == 0) && (part_list[p].geometry.faces[t].color.b == 0)) continue;
                 if ((part_list[p].geometry.faces[t].color.r == 0) && (part_list[p].geometry.faces[t].color.g == 0) && (part_list[p].geometry.faces[t].color.b == 1)) continue;
-                part_list[p].geometry.faces[t].color.setHex(0xffffff);
+                part_list[p].geometry.faces[t].color.setHex(0xffffff);////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             }
             part_list[p].geometry.colorsNeedUpdate = true;
         }// BÜTÜN PARÇALARIN RENKLERİNİ GÜNCELLEDİM.
@@ -502,12 +477,7 @@ function mouseMove(event) {
     var sayac = uzerinde[0].faceIndex;
     if (sayac % 2 == 0) oteki = sayac + 1;
     if (sayac % 2 != 0) oteki = sayac - 1;
-    if ((uzerinde[0].face.color.r == 1) && (uzerinde[0].face.color.g == 1) && (uzerinde[0].face.color.b == 1)) {// uzerinde
-        // olduğu
-        // yüzey
-        // beyazsa
-        // yeşil
-        // yapıcaz
+    if ((uzerinde[0].face.color.r == 1) && (uzerinde[0].face.color.g == 1) && (uzerinde[0].face.color.b == 1)) {// face beyaz ise yeşile boyar
         for (i = 0; i < part_list.length; i++) {
             if (part_list[i] == uzerinde[0].object) {
 
@@ -517,7 +487,6 @@ function mouseMove(event) {
             yuzu2 = oteki;
         }
         for (j = 0; j < part_list.length; j++) {
-            // while(j!=part){
 
             for (q = 0; q < 12; q = q + 2) {
                 if (part_list[j].geometry.faces[q].color.r == 1 && part_list[j].geometry.faces[q].color.g == 0 && part_list[j].geometry.faces[q].color.b == 0) continue;
@@ -526,8 +495,7 @@ function mouseMove(event) {
                 part_list[j].geometry.faces[q].color.setHex(0xffffff);
                 part_list[j].geometry.faces[q + 1].color.setHex(0xffffff);
                 part_list[j].geometry.colorsNeedUpdate = true;
-            }// }
-            // }
+            }
         }
 
         uzerinde[0].object.geometry.faces[sayac].color.setHex(hover_color);
@@ -546,7 +514,7 @@ function mouseEntered(event) {
 }
 
 function init() {
-    console.log("init çalıştı");
+
     part_list = [];
     intersects2 = [];
     container = document.getElementById("assyContainer");
@@ -579,7 +547,7 @@ function init() {
 }
 
 function clearScene() {
-    console.log("clearScene çalıştı");
+
     for (let i = scene.children.length - 1; i >= 0; i--) {
         if (scene.children[i].type === "Mesh") {
             obj = scene.children[i];
@@ -592,7 +560,7 @@ function clearScene() {
 }
 
 function partSelected(atag) {
-    console.log("partSelected çalıştı");
+
     selectedPartName = atag.innerHTML;
     loadSelectedPartPanel();
     return false;
@@ -621,7 +589,7 @@ function loadSelectedPartPanel() {
                         if (parcaAdi == panels_array[q]) {
                             for (p = 0; p < 12; p++) {
                                 if (part_list[q].geometry.faces[p].color.r != 0 && part_list[q].geometry.faces[p].color.g != 0 && part_list[q].geometry.faces[p].color.b != 0) {
-                                  //  part_list[q].geometry.faces[p].color.setHex(0x000000);
+                                    part_list[q].geometry.faces[p].color.setHex(0x998855);
                                 }
                                 else {
                                     part_list[q].geometry.faces[p].color.setHex(0xffffff);
@@ -638,14 +606,12 @@ function loadSelectedPartPanel() {
                     var stripeThickness = parseFloat(x[i].getAttribute("stripThickness"));
                     document.getElementById("stripeThickness").value = stripeThickness;
                     var stripestr = x[i].getAttribute("stripes");
-
                     var stripes = stripestr.split('-');
 
                     document.getElementById("k1").checked = parseInt(stripes[0]);
                     document.getElementById("k2").checked = parseInt(stripes[1]);
                     document.getElementById("k3").checked = parseInt(stripes[2]);
                     document.getElementById("k4").checked = parseInt(stripes[3]);
-
                     document.getElementById("width").value = width;
                     document.getElementById("height").value = height;
                     document.getElementById("thickness").value = thickness;
@@ -657,7 +623,7 @@ function loadSelectedPartPanel() {
 }
 
 function loadPartList(panels) {
-    console.log("loadPartList çalıştı");
+
     selectedPartName = null;
     document.getElementById("partList").innerHTML = "";
 
@@ -757,9 +723,7 @@ function loadAssyNames(names) {
             i = 0;
             loadAssembly(this);
         };
-        /*
-         * jtag.onclick = function () { loadAssemblyJoin(this); };
-         */
+
         var deleteButton = document.createElement("a");
         deleteButton.className = "deleteBtn";
         deleteButton.innerHTML = "X";
@@ -775,7 +739,6 @@ function loadAssyNames(names) {
 }
 
 function loadAssy(str) {
-    console.log("loadAssy çalıştı");
     assyStr = str;
     var parser = new DOMParser();
     var xmlDoc = parser.parseFromString(str, "text/xml");
@@ -783,120 +746,85 @@ function loadAssy(str) {
     panels_array = [];
     part_list = [];
     panels = [];
-
     x = xmlDoc.documentElement.childNodes;
-    console.log(x);
 
     for (i = 0; i < x.length; i++) {
         if (x[i].nodeName == "panel") {
-            var distances = parseFloat(x[i].getAttribute("distances"));
-            var direction = x[i].getAttribute("direction");
-            var width = parseFloat(x[i].getAttribute("width"));
-            var height = parseFloat(x[i].getAttribute("height"));
-            var thickness = parseFloat(x[i].getAttribute("thickness"));
-            var partName = x[i].getAttribute("name");
-            var stripestr = x[i].getAttribute("stripes");
-            var stripes = stripestr.split('-');
-            var side1 = parseInt(stripes[0]);
-            var side2 = parseInt(stripes[1]);
-            var side3 = parseInt(stripes[2]);
-            var side4 = parseInt(stripes[3]);
+            if (x[i].nodeName == "panel") {
+                var distances = parseFloat(x[i].getAttribute("distances"));
+                var direction = x[i].getAttribute("direction");
+                var width = parseFloat(x[i].getAttribute("width"));
+                var height = parseFloat(x[i].getAttribute("height"));
+                var thickness = parseFloat(x[i].getAttribute("thickness"));
+                var partName = x[i].getAttribute("name");
+                var stripestr = x[i].getAttribute("stripes");
+                var stripes = stripestr.split('-');
+                var side1 = parseInt(stripes[0]);
+                var side2 = parseInt(stripes[1]);
+                var side3 = parseInt(stripes[2]);
+                var side4 = parseInt(stripes[3]);
 
-            join = x[i].getElementsByTagName("join")[0];
-            if (join != null) {
-                var joinDistancesString = join.getAttribute("distances");
-                var joinJoinedFacesString = join.getAttribute("joinedFaces");
-                var joinedFaces = joinJoinedFacesString.split('*');
-                joinedFaces1.push(joinedFaces[0]);
-                joinedFaces2.push(joinedFaces[1]);
-                joinedFaces3.push(joinedFaces[2]);
-                var joinJoiningFacesString = join.getAttribute("joiningFaces");
-                var joiningFaces = joinJoiningFacesString.split('*');
-                joiningFaces1.push(joiningFaces[0]);
-                joiningFaces2.push(joiningFaces[1]);
-                joiningFaces3.push(joiningFaces[2]);
-                var joinedPanel = join.getAttribute("joinedPanel");
-                var distances = joinDistancesString.split('*');
-                console.log(distances);
-                mesafeler1.push(distances[0]);
-                mesafeler2.push(distances[1]);
-                mesafeler3.push(distances[2]);
-                console.log("burda check");
-                var pInfo = new PanelInfo(partName, joinedPanel, distances, joiningFaces, joinedFaces);
-                panels.push(pInfo);
-                console.log(pInfo.name);
-                console.log(pInfo.joiningPanel);
+                join = x[i].getElementsByTagName("join")[0];
+                if (join != null) {
+                    var joinDistancesString = join.getAttribute("distances");
+                    var joinJoinedFacesString = join.getAttribute("joinedFaces");
+                    var joinedFaces = joinJoinedFacesString.split('*');
+                    joinedFaces1.push(joinedFaces[0]);
+                    joinedFaces2.push(joinedFaces[1]);
+                    joinedFaces3.push(joinedFaces[2]);
+                    var joinJoiningFacesString = join.getAttribute("joiningFaces");
+                    var joiningFaces = joinJoiningFacesString.split('*');
+                    joiningFaces1.push(joiningFaces[0]);
+                    joiningFaces2.push(joiningFaces[1]);
+                    joiningFaces3.push(joiningFaces[2]);
+                    var joinedPanel = join.getAttribute("joinedPanel");
+                    var distances = joinDistancesString.split('*');
+                    console.log(distances);
+                    mesafeler1.push(distances[0]);
+                    mesafeler2.push(distances[1]);
+                    mesafeler3.push(distances[2]);
+                    console.log("burda check");
+                    var pInfo = new PanelInfo(partName, joinedPanel, distances, joiningFaces, joinedFaces);
+                    panels.push(pInfo);
+                    console.log(pInfo.name);
+                    console.log(pInfo.joiningPanel);
+
+                }
+                else {
+                    // console.log("burda check2");
+                    var pInfo = new PanelInfo(partName, "", null, null, null);
+
+                    panels.push(pInfo);
+                }
+
+                // console.log("burda check");
+                var geometry = new THREE.BoxGeometry(width, height, thickness, 1, 1, 1);
+                // set side Colors according to stripes //
+            }
+            for (var s = 0; s < 12; s++) {
+                geometry.faces[s].color.setHex(0x998855);
 
             }
-            else {
-                console.log("burda check2");
-                var pInfo = new PanelInfo(partName, "", null, null, null);
-
-                panels.push(pInfo);
-            }
-
-            console.log("burda check");
-            var geometry = new THREE.BoxGeometry(width, height, thickness, 1, 1, 1);
-            // set side Colors according to stripes //
-            /*
-			 * for (var s = 0; s < 12; s++) {
-			 * geometry.faces[s].color.setHex(0xffffff); if ((s == 0 || s == 1) &&
-			 * side1) geometry.faces[s].color.setHex(0xffffff); else if ((s == 4 ||
-			 * s == 5) && side2) geometry.faces[s].color.setHex(0xffffff); else
-			 * if ((s == 2 || s == 3) && side3)
-			 * geometry.faces[s].color.setHex(0xffffff); else if ((s == 6 || s ==
-			 * 7) && side4) geometry.faces[s].color.setHex(0xffffff); }
-			 */
-            var haci = new THREE.MeshPhongMaterial({
+            var material = new THREE.MeshPhongMaterial({
                 color: 0xffffff,
                 flatShading: true,
                 vertexColors: THREE.VertexColors
             });
-
-            function createLabel(text, size) {
-                var canvas = document.createElement("canvas");
-                var context = canvas.getContext("2d");
-                context.font = size + "pt Arial";
-                context.textAlign = "center";
-                context.fillRect(0, 0, 1000, 1000);
-                context.fillStyle = "white";
-                context.fillText(text, canvas.width / 2, canvas.height / 2);
-                var texture = new THREE.Texture(canvas);
-                texture.needsUpdate = true;
-                var material = new THREE.MeshPhongMaterial({
-                    map: texture,
-                    color: 0xffffff,
-                });
-                return material;
-            }
-
-            var material0 = createLabel("", 50);
-            var material1 = createLabel("", 50);
-            var material2 = createLabel("", 50);
-            var material3 = createLabel("", 50);
-            var material4 = createLabel("", 50);
-            var material5 = createLabel("", 50);
-            materialArray = [material0, material1, material2, material3, material4, material5, haci];
-
-            // take transform information//
+            //take transform information//
             tr = x[i].getElementsByTagName("tr")[0];
+
             var trString = tr.getAttribute("values");
             var values = trString.split('*');
             for (z = 0; z < values.length; ++z) {
                 values[z] = parseFloat(values[z]);
             }
-
-            console.log(tr);
-            console.log(join);
-
             var bufferGeometry = new THREE.BufferGeometry().fromGeometry(geometry);
             geometry.applyMatrix(new THREE.Matrix4().set(values[0], values[1], values[2], values[3],
                 values[4], values[5], values[6], values[7],
                 values[8], values[9], values[10], values[11],
                 values[12], values[13], values[14], values[15]
             ));
-
-            var panel = new THREE.Mesh(geometry, materialArray);
+            var panel = new THREE.Mesh(geometry, material);
             panel.updateMatrix();
             scene.add(panel);
             var a = 0;
@@ -908,12 +836,6 @@ function loadAssy(str) {
                 if (scene.children[b + 1] == null) break;
                 a = a + 1;
             }
-            /*
-             * for(j=0;j<part_list.length;j++){ for(i=0;i<12;i++){
-             *
-             * part_list[j].geometry.faces[i].materialIndex=6;}
-             * part_list[j].geometry.elementsNeedUpdate=true;}
-             */
         }
     }
     loadPartList(panels);

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="Design.css">
+    <title>Tasarım</title>
+    <script src="three.js-master\build\three.js"></script>
+    <script src="three.js-master\examples\js\controls\TrackballControls.js"></script>
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="Design.js"></script>
+    <script>
+        var userId = 1;
+        $(document).ready(function () {
+            $.ajax({
+                url: "http://192.168.2.251:1795/cppcmsService/getAssyNames/" + userId, success: function (result) {
+                    loadAssyNames(result);
+                }
+            });
+            $(window).resize(function () {
+                setCanvasSize();
+            });
+        });
+    </script>
+    <script type="text/javascript">
+
+        function loadAssembly(object) {
+            assemblyName = object.innerHTML;
+            $.ajax({
+                url: "http://192.168.2.251:1795/cppcmsService/assyXML/" + userId + "/" + assemblyName,
+                success: function (result) {
+                    loadAssy(result);
+                    document.getElementById("assyTitle").innerHTML = assemblyName;
+                }
+            });
+        }
+
+        function deleteAssembly(object) {
+            var assyName = object.parentElement.firstChild.innerHTML;
+            $.ajax({
+                url: "http://192.168.2.251:1795/cppcmsService/deleteAssy/" + userId + "/" + assyName,
+                success: function (result) {
+                    loadAssyNames(result);
+                }
+            });
+        }
+
+        function addAssembly() {
+            var assyName = prompt("Tasarım Adı:", "");
+            $.ajax({
+                url: "http://192.168.2.251:1795/cppcmsService/addAssy/" + userId + "/" + assyName,
+                success: function (result) {
+                    loadAssyNames(result);
+                }
+            });
+        }
+
+        function addNewPart() {
+            var partName = prompt("Parça Adı:", "");
+            $.ajax({
+                url: "http://192.168.2.251:1795/cppcmsService/addPart/" + userId + "/" + assemblyName + "/" + partName,
+                success: function (result) {
+                    loadAssy(result);
+                }
+            });
+        }
+
+        function deleteJoin(object) {
+            //var assyName=object.parentElement.firstChild.innerHTML;
+            var joiningPart = object.parentElement.parentElement.parentElement.firstChild.innerHTML;
+            console.log("Delete Join");
+            console.log(userId);
+            console.log(assemblyName);
+            console.log(joiningPart);
+            $.ajax({
+                url: "http://192.168.2.251:1795/cppcmsService/deleteJoin/" + userId + "/" + assemblyName + "/" + joiningPart,
+                success: function (result) {
+                    loadAssy(result);
+                }
+            });
+
+        }
+
+        function deletePart(object) {
+            var partName = object.parentElement.firstChild.innerHTML;
+            $.ajax({
+                url: "http://192.168.2.251:1795/cppcmsService/deletePart/" + userId + "/" + assemblyName + "/" + partName,
+                success: function (result) {
+                    loadAssy(result);
+                }
+            });
+        }
+
+        function updatePart() {
+            var properties = "";
+            var width = document.getElementById("width").value;
+            var height = document.getElementById("height").value;
+            var thickness = document.getElementById("thickness").value;
+            var stripes = +document.getElementById("k1").checked + "-" + (+document.getElementById("k2").checked) + "-" + (+document.getElementById("k3").checked) + "-" + (+document.getElementById("k4").checked);
+            var stripeThickness = document.getElementById("stripeThickness").value;
+            var material = document.getElementById("material").value;
+            var direction = document.getElementById("direction").value;
+            var joiningFaces = document.getElementById("joiningFaces1").value + "-" + document.getElementById("joiningFaces2").value + "-" + document.getElementById("joiningFaces3").value;
+            var joinedFaces = document.getElementById("joinedFaces1").value + "-" + document.getElementById("joinedFaces2").value + "-" + document.getElementById("joinedFaces3").value;
+            var distances = document.getElementById("distance1").value + "-" + document.getElementById("distance2").value + "-" + document.getElementById("distance3").value;
+            properties = width + "@" + height + "@" + thickness + "@" + stripes + "@" + stripeThickness + "@" + material + "@" + direction + "@" + joinedFaces + "@" + joiningFaces + "@" + distances;
+            $.ajax({
+                url: "http://192.168.2.251:1795/cppcmsService/updatePart/" + userId + "/" + assemblyName + "/" + selectedPartName + "/" + properties,
+                success: function (result) {
+                    loadAssy(result);
+                }
+            });
+        }
+
+        function addJoin() {
+            var joiningFaces = document.getElementById("joiningFaces1").value + "-" + document.getElementById("joiningFaces2").value + "-" + document.getElementById("joiningFaces3").value;
+            var joinedFaces = document.getElementById("joinedFaces1").value + "-" + document.getElementById("joinedFaces2").value + "-" + document.getElementById("joinedFaces3").value;
+            var distances = document.getElementById("distance1").value + "-" + document.getElementById("distance2").value + "-" + document.getElementById("distance3").value;
+            var joiningPart = document.getElementById("joiningPart").value;
+            var joinedPart = document.getElementById("joinedPart").value;
+            $.ajax({
+                url: "http://192.168.2.251:1795/cppcmsService/addJoin/" + userId + "/" + assemblyName + "/" + joiningPart + "/" + joinedPart + "/" + joiningFaces + "@" + joinedFaces + "@" + distances,
+                success: function (result) {
+                    loadAssy(result);
+                    baglaCalisti = 1;
+                }
+            });
+            if (selectedJoinID != -1 && panels.length <= selectedJoinID) {
+                var i = selectedJoinID;
+                if (panels[i].joinDistances != null) {
+                    console.log(panels[i].name);
+                    console.log(panels[i].joinedPanel);
+                    document.getElementById("distance1").placeholder = parseInt(panels[i].joinDistances[0]);
+                    document.getElementById("distance2").placeholder = parseInt(panels[i].joinDistances[1]);
+                    document.getElementById("distance3").placeholder = parseInt(panels[i].joinDistances[2]);
+                    document.getElementById("joiningFaces1").value = parseInt(panels[i].faces2[0]);//
+                    document.getElementById("joiningFaces2").value = parseInt(panels[i].faces2[1]);
+                    document.getElementById("joiningFaces3").value = parseInt(panels[i].faces2[2]);
+                    document.getElementById("joinedFaces1").value = parseInt(panels[i].faces1[0]);
+                    document.getElementById("joinedFaces2").value = parseInt(panels[i].faces1[1]);
+                    document.getElementById("joinedFaces3").value = parseInt(panels[i].faces1[2]);
+                    document.getElementById("joiningPart").value = panels[i].name;
+                    document.getElementById("joinedPart").value = panels[i].joinedPanel;
+                }
+            }
+        }
+
+
+    </script>
+
+</head>
+<body onload="init()">
+<div style="position: relative; width: 80%; margin: auto;">
+    <div style="width: 100%; height: 800px">
+        <div class="panel">
+            <h2 class="title">Tasarımlarım</h2>
+            <div id="infopart">
+                <div id="mousecoord"></div>
+                <div id="hoverinfo"></div>
+            </div>
+            <div>
+                <ul id="assyList" style="margin: 10px 0px 0px 30px;">
+
+                </ul>
+            </div>
+            <a class="btn" onclick="addAssembly();"
+               style="margin: 10px 0px 0px 30px;"> Yeni Tasarım</a>
+            <br>
+            <button  class="btn" onclick="baslat()" id="basla">Let's Go!</button>
+            <br>
+            <button class="btn" id="secim1" readonly>Seçim1</button>
+            <br>
+            <button class="btn" id="secim2" readonly>Seçim2</button>
+            <br> <br> <br>
+            <button class="btn" id="secim3" readonly>Seçim3</button>
+            <br>
+            <button class="btn" id="secim4" readonly>Seçim4</button>
+            <br> <br> <br>
+            <button class="btn" id="secim5" readonly>Seçim5</button>
+            <br>
+            <button class="btn" id="secim6" readonly>Seçim6</button>
+        </div>
+
+        <div class="panel" style="width: calc(60% - 12px)">
+            <div style="height: 90%">
+                <h2 id="assyTitle" class="title">""</h2>
+                <div class="panel"
+                     style="width: 40px; position: relative; height: calc(100% - 57px); float: left; margin-left: 10px; margin-top: 0px; margin-right: 0px;">
+                    <a class="btn" onclick="addNewPart();"
+                       style="width: 40px; height: 40px; padding: 0px 0px 0px 0px;">+</a>
+                </div>
+                <div id="assyContainer"
+                     style="width: calc(100% - 74px); border: 1px solid gray; position: relative; display: inline-block; float: left; margin-left: 10px; margin-right: 10px; height: calc(100% - 57px)">
+
+                </div>
+            </div>
+            <div style="height: calc(10% - 20px); margin: 0px 10px 10px 10px;">
+                <div style="width: 30%; float: left;">
+                    <ul>
+                        <li><p class="propertyText" style="width: 60px">Parça1:</p>
+                            <select id="joiningPart">
+                                <!--  <option value="0">Part1</option>
+                              <option value="1">Part2</option>
+                              <option value="2">Part3</option>
+                              <option value="3">Part4</option>-->
+                            </select></li>
+                        <li><p class="propertyText" style="width: 60px">Parça2:</p>
+                            <select id="joinedPart">
+                                <!--  <option value="0">Part1</option>
+                              <option value="1">Part2</option>
+                              <option value="2">Part3</option>
+                              <option value="3">Part4</option>-->
+                            </select></li>
+                    </ul>
+                </div>
+                <div style="width: 30%; float: left">
+                    <div>
+                        <ul>
+                            <li style="display: inline;"><p class="propertyText"
+                                                            style="width: 80px">Yüzeyler:</p> <select
+                                    id="joiningFaces1">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="2">6</option>
+                                <option value="3">7</option>
+                            </select></li>
+                            <li style="display: inline;"><select id="joiningFaces2">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="2">6</option>
+                                <option value="3">7</option>
+                            </select></li>
+                            <li style="display: inline;"><select id="joiningFaces3">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="2">6</option>
+                                <option value="3">7</option>
+                            </select></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <ul>
+                            <li style="display: inline;"><p class="propertyText"
+                                                            style="width: 80px">Yüzeyler:</p> <select id="joinedFaces1">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="2">6</option>
+                                <option value="3">7</option>
+                            </select></li>
+                            <li style="display: inline;"><select id="joinedFaces2">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="2">6</option>
+                                <option value="3">7</option>
+                            </select></li>
+                            <li style="display: inline;"><select id="joinedFaces3">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="2">6</option>
+                                <option value="3">7</option>
+                            </select></li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="width: 40%; float: left;">
+                    <ul>
+                        <li style="display: inline;"><p class="propertyText"
+                                                        style="width: 80px">Mesafeler:</p> <input id="distance1"
+                                                                                                  type="text"
+                                                                                                  style="width: 60px"
+                                                                                                  onkeypress='return event.charCode >= 48 && event.charCode <= 57'></input>
+                        </li>
+                        <li style="display: inline;"><input id="distance2"
+                                                            type="text" style="width: 60px"
+                                                            onkeypress='return event.charCode >= 48 && event.charCode <= 57'></input>
+                        </li>
+                        <li style="display: inline;"><input id="distance3"
+                                                            type="text" style="width: 60px"
+                                                            onkeypress='return event.charCode >= 48 && event.charCode <= 57'></input>
+                        </li>
+                    </ul>
+                </div>
+                <a class="btn" onclick="addJoin();"
+                   style="height: 10px; margin-left: 30px; margin-top: 0px; margin-right: 5px; margin-bottom: 5px;">Uygula</a>
+            </div>
+        </div>
+        <div class="panel">
+            <div style="width: 100%; height: 50%">
+                <h2 class="title">Parça Lİstesİ</h2>
+                <div style="overflow: scroll; height: 350px;">
+                    <ul class="ul" id="partList" style="margin: 10px 0px 0px 30px;">
+
+                    </ul>
+                </div>
+            </div>
+            <div id="selectedPart" style="width: 100%; height: 50%">
+                <h2 class="title">Seçİlİ Parça</h2>
+                <h2 id="selectedPartTitle" class="innerTitle"></h2>
+                <div id="selectedPartPropertyDiv" style="visibility: hidden">
+                    <ul>
+                        <li><p class="propertyText">Genişlik:</p> <input id="width"
+                                                                         type="text" style="width: 100px"
+                                                                         onkeypress='return event.charCode >= 48 && event.charCode <= 57'></input>
+                        </li>
+                        <li><p class="propertyText">Boy:</p> <input id="height"
+                                                                    type="text" style="width: 100px"
+                                                                    onkeypress='return event.charCode >= 48 && event.charCode <= 57'></input>
+                        </li>
+                        <li><p class="propertyText">Kalınlık:</p> <input
+                                id="thickness" type="text" style="width: 100px"
+                                onkeypress='return event.charCode >= 48 && event.charCode <= 57'></input>
+                        </li>
+                        <li><p class="propertyText">Kenar Bantları:</p> <input
+                                id="k1" type="checkbox"/><input id="k2" type="checkbox"/><input
+                                id="k3" type="checkbox"/><input id="k4" type="checkbox"/></li>
+                        <li><p class="propertyText">Bant Kalınlığı:</p> <input
+                                id="stripeThickness" type="text" style="width: 100px"
+                                onkeypress='return event.charCode >= 48 && event.charCode <= 57'></input>
+                        </li>
+                        <li><p class="propertyText">Malzeme:</p> <select
+                                id="material" name="materials">
+                            <option value="0">MDF2</option>
+                            <option value="1">MDF1</option>
+                            <option value="2">LDF2</option>
+                            <option value="3">LDF1</option>
+                        </select></li>
+                        <li><p class="propertyText">Yön:</p> <select id="direction"
+                                                                     name="directions">
+                            <option value="0">0</option>
+                            <option value="45">45</option>
+                            <option value="90">90</option>
+                        </select></li>
+                    </ul>
+                    <a class="btn" onclick="updatePart();"
+                       style="margin: 0px 0px 0px 20px;">Uygula</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div align="center">
+    <button>Info</button>
+
+    <p>Panel1 için birleştireceğiniz 1. kenar, panel2 için
+        birleştireceğiniz 1.kenarla yüz yüze yapışacak şekilde olmalıdır.</p>
+    <p>Panel1 için birleştireceğiniz 2. kenar, panel2 için
+        birleştireceğiniz 2.kenarla paralel olmalıdır.</p>
+    <p>Panel1 için birleştireceğiniz 3. kenar, panel2 için
+        birleştireceğiniz 3.kenarla paralel olmalıdır.</p>
+</div>
+</body>
+</html>
